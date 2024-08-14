@@ -14,6 +14,8 @@ class Physics {
     this.mass = mass;
     this.gravity = 9.81;
     this.position = new Vector3(0, 0, 0);
+    this.rotation = new Vector3(0, 0, 0);
+    this.deg = 0;
     this.velocity = new Vector3(0, 0, 0);
     this.accel = new Vector3(1, 1, 1);
     this.hsubmerged = this.getSubmergedHeight();
@@ -28,6 +30,7 @@ class Physics {
     this.enginForce = 2;
     this.InputThrottle = 0.0;
 
+
     document.addEventListener("keydown", (event) => {
       if (event.key == "w") {
         if (this.InputThrottle <= 1) {
@@ -35,6 +38,20 @@ class Physics {
         }
       }
     });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key == "a") {
+        this.deg += Math.PI / 100;
+        console.log(this.deg);
+      }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key == "d") {
+        this.deg -= Math.PI / 100;
+        console.log(this.deg);
+      }
+    });
+
   }
 
   // حساب الارتفاع المغمور بناءً على قوة الطفو
@@ -71,6 +88,7 @@ class Physics {
 
   update() {
     ///// Total force
+    this.deg %= Math.PI*2;
    
     if (this.InputThrottle > 0)
       this.InputThrottle -= 0.01
@@ -78,9 +96,7 @@ class Physics {
       this.InputThrottle = 0;
     }
     var totalF = this.totalForce();
-    console.log("before dt", totalF)
     totalF = totalF.multiplyScalar(this.dt);
-    console.log("after  dt", totalF)
 
     
   
@@ -115,13 +131,18 @@ class Physics {
      } else {
       this.enginForce = 700;
      }
-    console.log(this.InputThrottle, this.enginForce);
     this.throttle = this.InputThrottle * this.enginForce;
     var tractionForce = this.throttle;
-    var tractionVector = new Vector3(0, 0, tractionForce);
+    console.log(this.deg)
+    var tractionVector = new Vector3(-tractionForce * (Math.cos(this.deg)), 0,    tractionForce * Math.sin(this.deg)
+  );
+    this.rotation = tractionVector
     return tractionVector;
   }
-
+  applyRotation(deg) {
+    this.deg = deg;
+    console.log(this.deg, deg);
+  }
   dragForce() {
     var F_drag = (this.airForce().addVector(this.waterForce()));
     return F_drag;

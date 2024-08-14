@@ -168,8 +168,9 @@ const modelLocations = [
   { x: 0, y: 0, z: 0 },
 ];
 const modelRotations = [
-  { x: 0, y: Math.PI / 2, z: 0 },
+  { x: 0, y: 0, z: 0 },
 ];
+
 const modelScales = [
   { x: lengthRatio, y: heightRatio, z: widthRatio },
 ];
@@ -269,9 +270,16 @@ function animate() {
 physic.dt = deltatime
 physic.update();
 
-////////////////////////////////////////////////////////////////////
-//NOTE(Ezz): position.x set to 1 until throttle calculation is fixed
-//////////////////////////////////////////////////////////////////
+document.addEventListener("keydown", (event) => {
+  if (event.key == "a") {
+      boatModel.rotation.set(0, physic.deg, 0);
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.key == "d") {
+      boatModel.rotation.set(0, physic.deg, 0);
+  }
+});
  models[0].position.x = physic.position.x;
  models[0].position.y = physic.position.y;
  models[0].position.z = physic.position.z;
